@@ -2,6 +2,13 @@ parameters:
     currency.rates.cache.key: test-currency-rates-%s
     currency.rates.cache.ttl: 60
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+    App\Retriever\CBRRetriever:
+        class: App\Retriever\CBRRetriever
+        public: true
     App\Retriever\CurrencyRatesRetrieverInterface:
         class: App\Retriever\TestRetriever
         public: true
