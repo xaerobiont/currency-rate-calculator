@@ -21,7 +21,7 @@ class CurrencyRateCalculator implements CurrencyRateCalculatorInterface
         #[Autowire('%currency.rates.cache.key%')]
         protected string $cacheKey,
         #[Autowire('%currency.rates.cache.ttl%')]
-        protected int $cacheTTL,
+        protected ?int $cacheTTL = null,
     )
     {
     }
