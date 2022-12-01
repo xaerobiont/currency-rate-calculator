@@ -8,7 +8,5 @@ services:
         public: true
     App\Retriever\CBRRetriever:
         class: App\Retriever\CBRRetriever
-        public: true
     App\Retriever\CurrencyRatesRetrieverInterface:
         class: App\Retriever\TestRetriever
-        public: true

@@ -23,10 +23,8 @@ services:
             - '../src/Kernel.php'
     App\Retriever\CurrencyRatesRetrieverInterface:
         class: App\Retriever\CBRRetriever
-        public: true
     App\Service\CurrencyRateCalculatorInterface:
         class: App\Service\CurrencyRateCalculator
-        public: true
     App\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
