@@ -32,7 +32,7 @@ class CurrencyRateController extends AbstractController
 
         return $this->json([
             'rate' => $rate,
-            'daily_diff' => $rate - $previousRate,
+            'daily_diff' => round($rate - $previousRate, 4),
         ]);
     }
 }

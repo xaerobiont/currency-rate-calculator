@@ -49,7 +49,7 @@ final class CBRRetriever implements CurrencyRatesRetrieverInterface
                 self::SOURCE,
                 self::BASE_CURRENCY,
                 trim((string)$item->CharCode),
-                $rate,
+                round($rate, 4),
                 $date
             );
             $errors = $this->validator->validate($rateDTO);
