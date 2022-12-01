@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use DateTime;
 use App\DTO\CurrencyRateDTO;
 use App\Retriever\CurrencyRatesRetrieverInterface;
-use DateTime;
+use Symfony\Component\Cache\CacheItem;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -15,24 +17,28 @@ class CurrencyRateCalculator implements CurrencyRateCalculatorInterface
     public function __construct(
         protected CacheInterface $cache,
         protected SerializerInterface $serializer,
-        protected CurrencyRatesRetrieverInterface $retriever
+        protected CurrencyRatesRetrieverInterface $retriever,
+        #[Autowire('%currency.rates.cache.key%')]
+        protected string $cacheKey,
+        #[Autowire('%currency.rates.cache.ttl%')]
+        protected int $cacheTTL,
     )
     {
     }
 
     public function getRate(DateTime $date, string $currency, string $baseCurrency): null|float|int
     {
-        $key = sprintf('currency-rates-%s', $date->format('d-m-Y'));
+        $key = sprintf($this->cacheKey, $date->format('d-m-Y'));
         /** @psalm-suppress MixedAssignment */
-        $rates = $this->cache->get($key, function () use ($date){
-            // assume that daily rates are immutable and store cache forever
+        $rates = $this->cache->get($key, function (CacheItem $item) use ($date) {
+            $item->expiresAfter($this->cacheTTL);
             $rates = $this->retriever->retrieve($date);
 
             return $this->serializer->serialize($rates, 'json');
         });
 
         /** @var CurrencyRateDTO[] $rates */
-        $rates = $this->serializer->deserialize($rates, CurrencyRateDTO::class.'[]', 'json');
+        $rates = $this->serializer->deserialize($rates, CurrencyRateDTO::class . '[]', 'json');
 
         $rate = $this->findRateByCurrency($rates, $currency);
 

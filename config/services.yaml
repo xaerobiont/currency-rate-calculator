@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    currency.rates.cache.key: currency-rates-%s
+    currency.rates.cache.ttl: null # assume that daily rates are immutable and store cache forever
 
 services:
     # default configuration for services in *this* file

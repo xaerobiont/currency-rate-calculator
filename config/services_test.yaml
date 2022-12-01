@@ -1,0 +1,7 @@
+parameters:
+    currency.rates.cache.key: test-currency-rates-%s
+    currency.rates.cache.ttl: 60
+services:
+    App\Retriever\CurrencyRatesRetrieverInterface:
+        class: App\Retriever\TestRetriever
+        public: true
