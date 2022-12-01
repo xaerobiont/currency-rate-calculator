@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8087:80
+    links:
+      - php
+      - redis
+  redis:
+    image: redis:alpine
+    ports:
+      - 6380:6379
+  php:
+    build:
+      context: ./docker/php
+    volumes:
+      - ./:/var/www/html
+    links:
+      - redis
